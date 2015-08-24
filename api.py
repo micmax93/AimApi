@@ -9,7 +9,7 @@ import select
 _magic_word = 0xFACE
 _aim_version = 0x01
 
-_header_fmt = struct.Struct('!hbbb')
+_header_fmt = struct.Struct('!Hbbb')
 
 
 def make_header(msg_type, payload_size):
@@ -35,7 +35,7 @@ _EVENT_VIEWER = 135
 
 _viewer_fmt = struct.Struct('!IbbbbIHHHH')
 ViewerDetail = namedtuple('ViewerDetail',
-                          ['viewer_id', 'gender', 'age', '_reserved1', '_reserved2', 'viewing_time', 'x_pos', 'y_pos',
+                          ['viewer_id', 'gender', 'age', 'reserved1', 'reserved2', 'viewing_time', 'x_pos', 'y_pos',
                            'width', 'height'])
 
 _gender_unknown = 0
@@ -85,7 +85,7 @@ class ApiConnection(object):
         elif msg == _EVENT_AUDIENCE_STATUS:
             return struct.unpack('!B', data)[0]
         else:
-            raise InvalidResponseException()
+            raise InvalidResponseException(msg)
 
     def get_audience_details(self):
         self.conn.sendall(make_header(_apiGetAudienceDetails, 0))
@@ -100,7 +100,7 @@ class ApiConnection(object):
                 viewers.append(viewer)
             return viewers
         else:
-            raise InvalidResponseException()
+            raise InvalidResponseException(msg)
 
     def subscribe_viewer_events(self, subscribe=True):
         self.conn.sendall(make_header(_apiGetViewerEvents, 1))
@@ -115,12 +115,12 @@ class ApiConnection(object):
         elif msg == _EVENT_NACK:
             raise CommandFailedException()
         else:
-            raise InvalidResponseException()
+            raise InvalidResponseException(msg)
 
     def receive_viewer_event(self):
         msg, load = self._get_response_header()
         if msg != _EVENT_VIEWER:
-            raise InvalidResponseException()
+            raise InvalidResponseException(msg)
         e_type = struct.unpack('!B', self.conn.recv(1))
         viewer = get_viewer_detail(self.conn.recv(20))
         return (e_type == 0), viewer
