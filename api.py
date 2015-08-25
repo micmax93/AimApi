@@ -33,7 +33,7 @@ _EVENT_AUDIENCE_DETAILS = 131
 _EVENT_MAJORITY_GENDER = 132
 _EVENT_VIEWER = 135
 
-_viewer_fmt = struct.Struct('!IbbbbIHHHH')
+_viewer_fmt = struct.Struct('!IBBBBIHHHH')
 ViewerDetail = namedtuple('ViewerDetail',
                           ['viewer_id', 'gender', 'age', 'reserved1', 'reserved2', 'viewing_time', 'x_pos', 'y_pos',
                            'width', 'height'])
@@ -105,9 +105,9 @@ class ApiConnection(object):
     def subscribe_viewer_events(self, subscribe=True):
         self.conn.sendall(make_header(_apiGetViewerEvents, 1))
         if subscribe:
-            data = struct.pack('!b', 1)
+            data = struct.pack('!B', 1)
         else:
-            data = struct.pack('!b', 0)
+            data = struct.pack('!B', 0)
         self.conn.sendall(data)
         msg, data = self._get_response()
         if msg == _EVENT_ACK:
