@@ -9,7 +9,7 @@ import select
 _magic_word = 0xFACE
 _aim_version = 0x01
 
-_header_fmt = struct.Struct('!Hbbb')
+_header_fmt = struct.Struct('!HBBB')
 
 
 def make_header(msg_type, payload_size):
@@ -124,3 +124,6 @@ class ApiConnection(object):
         e_type = struct.unpack('!B', self.conn.recv(1))
         viewer = get_viewer_detail(self.conn.recv(20))
         return (e_type == 0), viewer
+
+    def close(self):
+        self.conn.close()
