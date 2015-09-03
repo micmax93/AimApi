@@ -15,9 +15,11 @@ unknown = 0
 
 
 class AgeGenderGrid(object):
-    row_dict = {child: 0, young: 1, adult: 2, senior: 3,
-                'child': 0, 'young': 1, 'adult': 2, 'senior': 3}
-    col_dict = {male: 0, female: 1, 'm': 0, 'f': 1}
+    row_dict = {0: -1, child: 0, young: 1, adult: 2, senior: 3,
+                'child': 0, 'young': 1, 'adult': 2, 'senior': 3,
+                'all': -1, 'any': -1, '*': -1, '': None, '0': None}
+    col_dict = {0: -1, male: 0, female: 1, 'm': 0, 'f': 1,
+                'all': -1, 'any': -1, '*': -1, '': None, '0': None}
 
     def __init__(self, value=None):
         self.table = [[value for x in range(2)] for x in range(4)]
@@ -27,7 +29,9 @@ class AgeGenderGrid(object):
 
     def _set_col(self, row, gender, cb):
         gender = self.col_dict[gender]
-        if gender != 0:
+        if gender is None:
+            return
+        if gender != -1:
             self.table[row][self.col_dict[gender]] = cb(self.table[row][gender])
         else:
             for i in range(len(self.table[row])):
@@ -35,7 +39,9 @@ class AgeGenderGrid(object):
 
     def set(self, age, gender, cb):
         age = self.row_dict[age]
-        if age != 0:
+        if age is None:
+            return
+        if age != -1:
             self._set_col(age, gender, cb)
         else:
             for i in range(len(self.table)):
