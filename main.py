@@ -1,3 +1,5 @@
+import time
+
 __author__ = 'micmax93'
 from api import ApiConnection
 from player import SinglePlayer
@@ -31,8 +33,10 @@ def run_once():
     audience = api.get_audience_details()
     viewers_grid = get_viewers_grid(audience)
     sub = sub_list.select_subscriber(viewers_grid, targeted_alg=_mode)
+    print subscribers[sub]['video']
     player.set_next(subscribers[sub]['video'])
-    player.wait()
+    time.sleep(4)
+    player.wait(margin=900)
 
 
 if __name__ == '__main__':

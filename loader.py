@@ -30,6 +30,7 @@ def build_grid(configs):
 
 def check_videos(configs):
     for key in configs:
+        configs[key]['log'] = key + '.csv'
         configs[key]['video'] = key + '.' + configs[key]['ini'].get('video', 'extension')
         assert os.path.isfile(configs[key]['video']), configs[key]['video'] + ' does not exists.'
     return configs

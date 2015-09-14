@@ -6,7 +6,7 @@ from datetime import datetime
 child = api._age_child
 young = api._age_young
 adult = api._age_older
-senior = api._age_older
+senior = api._age_senior
 
 male = api._gender_male
 female = api._gender_female
@@ -18,8 +18,8 @@ class AgeGenderGrid(object):
     row_dict = {0: -1, child: 0, young: 1, adult: 2, senior: 3,
                 'child': 0, 'young': 1, 'adult': 2, 'senior': 3,
                 'all': -1, 'any': -1, '*': -1, '': None, '0': None}
-    col_dict = {0: -1, male: 0, female: 1, 'm': 0, 'f': 1,
-                'all': -1, 'any': -1, '*': -1, '': None, '0': None}
+    col_dict = {0: -1, male: 0, female: 1, 'm': 0, 'f': 1, 'M': 0, 'F': 1,
+                'all': -1, 'any': -1, '*': -1, '1': -1, '': None, '0': None}
 
     def __init__(self, value=None):
         self.table = [[value for x in range(2)] for x in range(4)]
@@ -104,7 +104,7 @@ class SubscribersList():
         for i in range(len(self.grid)):
             for j in range(len(self.grid[i])):
                 for k in range(len(self.grid[i][j])):
-                    self.subscribers[self.grid[i][j][k]] += viewers_grid.table[i][j]
+                    self.subscribers[self.grid[i][j][k]]['viewers'] += viewers_grid.table[i][j]
 
     def choose_subscriber(self, targeted_alg=True):
         subs = filter(lambda s: not s['selected'], self.subscribers.values())
