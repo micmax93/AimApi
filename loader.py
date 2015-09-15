@@ -3,6 +3,7 @@ __author__ = 'micmax93'
 from ConfigParser import ConfigParser
 import os
 import re
+import logger
 from grid import SubscribersGrid
 
 
@@ -30,7 +31,7 @@ def build_grid(configs):
 
 def check_videos(configs):
     for key in configs:
-        configs[key]['log'] = key + '.csv'
+        configs[key]['log'] = logger.CsvLogger(key + '.csv', ['date', 'id', 'age', 'gender'])
         configs[key]['video'] = key + '.' + configs[key]['ini'].get('video', 'extension')
         assert os.path.isfile(configs[key]['video']), configs[key]['video'] + ' does not exists.'
     return configs
