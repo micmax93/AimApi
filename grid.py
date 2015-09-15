@@ -60,73 +60,73 @@ class ViewersGrid(AgeGenderGrid):
         self.set(age, gender, cb=self._cb)
 
 
-class SubscribersGrid(AgeGenderGrid):
+class PublishersGrid(AgeGenderGrid):
     def __init__(self):
         AgeGenderGrid.__init__(self, value=[])
 
     @staticmethod
-    def _get_cb(subscriber):
+    def _get_cb(publisher):
         def _cb(old_arr):
-            if subscriber in old_arr:
+            if publisher in old_arr:
                 return old_arr
             else:
-                return old_arr + [subscriber]
+                return old_arr + [publisher]
         return _cb
 
-    def add(self, age, gender, subscriber):
-        self.set(age, gender, cb=self._get_cb(subscriber))
+    def add(self, age, gender, publisher):
+        self.set(age, gender, cb=self._get_cb(publisher))
 
 
-class SubscribersList():
-    def __init__(self, subscribers_grid):
-        self.subscribers = {}
-        assert isinstance(subscribers_grid, SubscribersGrid)
-        self.grid = subscribers_grid.table
+class PublishersList():
+    def __init__(self, publishers_grid):
+        self.publishers = {}
+        assert isinstance(publishers_grid, PublishersGrid)
+        self.grid = publishers_grid.table
         for i in range(len(self.grid)):
             for j in range(len(self.grid[i])):
                 for k in range(len(self.grid[i][j])):
                     self.add(self.grid[i][j][k])
 
-    def add(self, subscriber):
-        if subscriber not in self.subscribers:
-            self.subscribers[subscriber] = {'sub': subscriber, 'viewers': 0, 'selected': False, 'date': datetime.now()}
+    def add(self, publisher):
+        if publisher not in self.publishers:
+            self.publishers[publisher] = {'pub': publisher, 'viewers': 0, 'selected': False, 'date': datetime.now()}
 
     def clear_viewings(self):
-        for s in self.subscribers:
-            self.subscribers[s]['viewers'] = 0
+        for s in self.publishers:
+            self.publishers[s]['viewers'] = 0
 
     def clear_selection(self):
-        for s in self.subscribers:
-            self.subscribers[s]['selections'] = False
+        for s in self.publishers:
+            self.publishers[s]['selections'] = False
 
     def update_viewers(self, viewers_grid):
         self.clear_viewings()
         for i in range(len(self.grid)):
             for j in range(len(self.grid[i])):
                 for k in range(len(self.grid[i][j])):
-                    self.subscribers[self.grid[i][j][k]]['viewers'] += viewers_grid.table[i][j]
+                    self.publishers[self.grid[i][j][k]]['viewers'] += viewers_grid.table[i][j]
 
-    def choose_subscriber(self, targeted_alg=True):
-        subs = filter(lambda s: not s['selected'], self.subscribers.values())
-        if len(subs) == 0:
+    def choose_publisher(self, targeted_alg=True):
+        pubs = filter(lambda s: not s['selected'], self.publishers.values())
+        if len(pubs) == 0:
             self.clear_selection()
-            subs = self.subscribers.values()
-        val = max(s['viewers'] for s in subs)
+            pubs = self.publishers.values()
+        val = max(s['viewers'] for s in pubs)
         if val == 0 and targeted_alg:
             self.clear_selection()
-            subs = self.subscribers.values()
-            val = max(s['viewers'] for s in subs)
-        subs = filter(lambda s: s['viewers'] == val, subs)
-        subs = sorted(subs, key=lambda s: s['date'])
-        return subs[0]['sub']
+            pubs = self.publishers.values()
+            val = max(s['viewers'] for s in pubs)
+        pubs = filter(lambda s: s['viewers'] == val, pubs)
+        pubs = sorted(pubs, key=lambda s: s['date'])
+        return pubs[0]['pub']
 
-    def select_subscriber(self, viewers_grid, targeted_alg=True):
+    def select_publisher(self, viewers_grid, targeted_alg=True):
         assert isinstance(viewers_grid, ViewersGrid)
         self.update_viewers(viewers_grid)
-        sub = self.choose_subscriber(targeted_alg)
-        self.subscribers[sub]['selected'] = True
-        self.subscribers[sub]['date'] = datetime.now()
-        return sub
+        pub = self.choose_publisher(targeted_alg)
+        self.publishers[pub]['selected'] = True
+        self.publishers[pub]['date'] = datetime.now()
+        return pub
 
 
 

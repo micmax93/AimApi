@@ -4,7 +4,7 @@ from ConfigParser import ConfigParser
 import os
 import re
 import logger
-from grid import SubscribersGrid
+from grid import PublishersGrid
 
 
 def get_config_files(path):
@@ -21,7 +21,7 @@ def get_config_files(path):
 
 
 def build_grid(configs):
-    grid = SubscribersGrid()
+    grid = PublishersGrid()
     for key in configs:
         viewers = configs[key]['ini'].items('viewers')
         for age, gender in viewers:
