@@ -31,6 +31,9 @@ def get_viewers_grid(viewers):
         grid.add(viewer.age, viewer.gender)
     return grid
 
+_gender_dict = ['unknown', 'male', 'female']
+_age_dict = ['unknown', 'child', 'teen', 'young', 'older', 'senior']
+
 
 def run_once():
     audience = api.get_audience_details()
@@ -40,7 +43,7 @@ def run_once():
     player.set_next(publishers[pub]['video'])
     log.write_row([now, publishers[pub]['video'], len(audience), pub_list.publishers[pub]['viewers']])
     for a in audience:
-        publishers[pub]['log'].write_row([now, a.id, a.age, a.gender])
+        publishers[pub]['log'].write_row([now, a.id, _age_dict[a.age], _gender_dict[a.gender]])
     time.sleep(3)
     player.wait(margin=900)
 
