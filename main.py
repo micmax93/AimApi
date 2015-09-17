@@ -43,7 +43,7 @@ def run_once():
     player.set_next(publishers[pub]['video'])
     log.write_row([now, publishers[pub]['video'], len(audience), pub_list.publishers[pub]['viewers']])
     for a in audience:
-        publishers[pub]['log'].write_row([now, a.id, _age_dict[a.age], _gender_dict[a.gender]])
+        publishers[pub]['log'].write_row([now, a.viewer_id, _age_dict[a.age], _gender_dict[a.gender]])
     time.sleep(3)
     player.wait(margin=900)
 
